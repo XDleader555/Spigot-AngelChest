@@ -1,11 +1,6 @@
 package de.jeffclan.AngelChest;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -18,7 +13,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.PlayerInventory;
 
 public class PlayerListener implements Listener {
 
@@ -83,39 +77,10 @@ public class PlayerListener implements Listener {
 			tmp = p.getLocation().getBlock();
 		}
 		
-		Block angelChestBlock = tmp;
-		
-		Block fixedAngelChestBlock = angelChestBlock;
-		
-		//System.out.println(plugin.getConfig().getInt("max-radius"));
-		
+		Block angelChestBlock = Utils.findSafeBlock(tmp, plugin);
 
-		if (!angelChestBlock.getType().equals(Material.AIR)) {
-			List<Block> blocksNearby = Utils.getPossibleChestLocations(angelChestBlock.getLocation(),
-					plugin.getConfig().getInt("max-radius"));
-
-
-			if (blocksNearby.size() > 0) {
-				Collections.sort(blocksNearby, new Comparator<Block>() {
-					public int compare(Block b1, Block b2) {
-						double dist1 = b1.getLocation().distance(angelChestBlock.getLocation());
-						double dist2 = b2.getLocation().distance(angelChestBlock.getLocation());
-						if (dist1 > dist2)
-							return 1;
-						if (dist2 > dist1)
-							return -1;
-						return 0;
-					}
-				});
-				
-				fixedAngelChestBlock = blocksNearby.get(0);
-
-			}
-
-		}
-
-		plugin.angelChests.put(fixedAngelChestBlock,
-				new AngelChest(p.getUniqueId(), fixedAngelChestBlock, p.getInventory(), plugin));
+		plugin.angelChests.put(angelChestBlock,
+				new AngelChest(p.getUniqueId(), angelChestBlock, p.getInventory(), plugin));
 
 		// Delete players inventory
 		p.getInventory().clear();
@@ -126,7 +91,7 @@ public class PlayerListener implements Listener {
 		// send message after one twentieth second
 		Utils.sendDelayedMessage(p, plugin.messages.MSG_ANGELCHEST_CREATED, 1, plugin);
 		if(plugin.getConfig().getBoolean("show-location")) {
-			Utils.sendDelayedMessage(p, String.format(plugin.messages.MSG_ANGELCHEST_LOCATION , Utils.locationToString(fixedAngelChestBlock) ), 2, plugin);
+			Utils.sendDelayedMessage(p, String.format(plugin.messages.MSG_ANGELCHEST_LOCATION , Utils.locationToString(angelChestBlock) ), 2, plugin);
 		}
 	}
 

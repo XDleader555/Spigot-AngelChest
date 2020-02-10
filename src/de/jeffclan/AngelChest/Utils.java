@@ -1,12 +1,14 @@
 package de.jeffclan.AngelChest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.Comparator;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -73,7 +75,35 @@ public class Utils {
 		return true;
 	}
 	
-	
+	public static Block findSafeBlock(Block playerLoc, AngelChestPlugin plugin) {
+		Block fixedAngelChestBlock = playerLoc;
+		
+		//System.out.println(plugin.getConfig().getInt("max-radius"));
+		
+
+		if (!playerLoc.getType().equals(Material.AIR)) {
+			List<Block> blocksNearby = Utils.getPossibleChestLocations(playerLoc.getLocation(),
+					plugin.getConfig().getInt("max-radius"));
+					
+			if (blocksNearby.size() > 0) {
+				Collections.sort(blocksNearby, new Comparator<Block>() {
+					public int compare(Block b1, Block b2) {
+						double dist1 = b1.getLocation().distance(playerLoc.getLocation());
+						double dist2 = b2.getLocation().distance(playerLoc.getLocation());
+						if (dist1 > dist2)
+							return 1;
+						if (dist2 > dist1)
+							return -1;
+						return 0;
+					}
+				});
+				
+				fixedAngelChestBlock = blocksNearby.get(0);
+			}
+		}
+
+		return fixedAngelChestBlock;
+	}
 
 	/**
 	 * Puts everything from source into destination.

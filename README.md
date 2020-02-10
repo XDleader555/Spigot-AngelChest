@@ -13,6 +13,7 @@ Open VSCode and open the project folder. In the lower left corner under maven, r
 ```
 dependency:sources
 dependency:resolve -Dclassifier=javadoc
+eclipse:eclipse
 ```
 Then run install to download dependencies and build the plugin.
 

@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,13 +30,12 @@ public class AngelChest {
 		this.owner=owner;
 		this.block=block;
 		this.isProtected = plugin.getServer().getPlayer(owner).hasPermission("angelchest.protect");
-		
-		String hologramText = String.format(plugin.messages.HOLOGRAM_TEXT, plugin.getServer().getPlayer(owner).getName());
+
 		String inventoryName = String.format(plugin.messages.ANGELCHEST_INVENTORY_NAME, plugin.getServer().getPlayer(owner).getName());
 		overflowInv = Bukkit.createInventory(null, 54, inventoryName);
 		createChest(block);
-		hologram = new Hologram(block, hologramText,plugin);
-		
+		createHologram(block, plugin);
+
 		armorInv = playerItems.getArmorContents();
 		storageInv = playerItems.getStorageContents();
 		extraInv = playerItems.getExtraContents();
@@ -72,5 +72,23 @@ public class AngelChest {
 	
 	public long secondsRemaining() {
 		return configDuration - ((System.currentTimeMillis() - taskStart) / 1000);
+	}
+
+	public void createHologram(Block block, AngelChestPlugin plugin) {
+		String hologramText = String.format(plugin.messages.HOLOGRAM_TEXT, plugin.getServer().getPlayer(owner).getName());
+		hologram = new Hologram(block, hologramText, plugin);
+	}
+
+	public void destroyHologram(AngelChestPlugin plugin) {
+		for (UUID uuid : hologram.armorStandUUIDs) {
+			plugin.getServer().getEntity(uuid).remove();
+		}
+		
+		for(ArmorStand armorStand : hologram.armorStands) {
+			
+			armorStand.remove();
+		}
+		
+		hologram.destroy();
 	}
 }

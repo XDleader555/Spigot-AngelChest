@@ -17,7 +17,12 @@ commands:
     permission: angelchest.use
     description: "Lists info about your AngelChests"
     aliases: [listchest, acinfo]
-    usage: "/<command>"
+    usage: /<command>s
+  acfetch:
+    permission: angelchest.fetch
+    description: "Remotely retrieves your AngelChest. For use with economy plugins."
+    aliases: [acretrieve]
+    usage: /<command>s
 permissions:
   angelchest.use:
     description: "Players with this permission will have their items put into a chest on death by an Angel"

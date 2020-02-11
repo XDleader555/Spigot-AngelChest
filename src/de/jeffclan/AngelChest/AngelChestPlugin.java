@@ -66,6 +66,7 @@ public class AngelChestPlugin extends JavaPlugin {
 		
 		this.getCommand("unlock").setExecutor(new CommandUnlock(this));
 		this.getCommand("aclist").setExecutor(new CommandList(this));
+		this.getCommand("acfetch").setExecutor(new CommandFetch(this));
 		
 		getServer().getPluginManager().registerEvents(new PlayerListener(this),this);
 		getServer().getPluginManager().registerEvents(new HologramListener(this),this);

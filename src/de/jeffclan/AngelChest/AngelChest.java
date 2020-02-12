@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -80,8 +81,11 @@ public class AngelChest {
 	}
 
 	public void destroyHologram(AngelChestPlugin plugin) {
+		Entity holo;
 		for (UUID uuid : hologram.armorStandUUIDs) {
-			plugin.getServer().getEntity(uuid).remove();
+			holo = plugin.getServer().getEntity(uuid);
+			if(holo != null)
+				holo.remove();
 		}
 		
 		for(ArmorStand armorStand : hologram.armorStands) {

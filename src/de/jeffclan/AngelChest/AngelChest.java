@@ -5,9 +5,11 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -36,6 +38,15 @@ public class AngelChest {
 		overflowInv = Bukkit.createInventory(null, 54, inventoryName);
 		createChest(block);
 		createHologram(block, plugin);
+
+		// Remove curse of vanishing equipment
+		for(ItemStack i : playerItems.getContents()) {
+			if(!Utils.isEmpty(i)) {
+				if(i.getEnchantments().containsKey(Enchantment.VANISHING_CURSE)) {
+					playerItems.remove(i);
+				}
+			}
+		}
 
 		armorInv = playerItems.getArmorContents();
 		storageInv = playerItems.getStorageContents();
